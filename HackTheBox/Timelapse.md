@@ -3,7 +3,9 @@ Timelapse is an easy machine from HackTheBox that starts with publicly accessibl
 As with any CTF from HackTheBox, I always start with a Nmap scan of the target. Before I do that though, I typically like to set the target IP to a variable first:
 target=10.129.227.113
 From there, I run the following Nmap command:
+```bash
 sudo nmap -Pn -p- --min-rate 5000 -oN nmap-ports.txt $target && ports=$(grep ^[0-9] nmap-ports.txt | cut -d'/' -f1 | tr '\n' ',' | sed 's/,$//') && sudo nmap -Pn -n -p$ports -A -oN nmap-full.txt $target
+```
 This one-liner does a full scan of all 65,535 TCP ports, then whatever ports come back as open, those are saved to the ports variable. From there, those are fed into another Nmap scan with the -A flag. This performs OS detection, service version detection, and script scanning. I also send the output to a .txt file for future reference if needed.
 Once this is complete, we see the following:
 Could not load image
