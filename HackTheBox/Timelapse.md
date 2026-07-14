@@ -28,18 +28,23 @@ nxc smb $target -u 'Guest' -p '' --shares
 <img width="1438" height="326" alt="image" src="https://github.com/user-attachments/assets/40396ea9-ad37-4fad-8449-0425ac76fb23" />
 In this case, we have Guest authentication and read access over a non-standard share named "Shares". We also can see that the target's hostname is DC01 and the domain is timelapse.htb. 
 I'll utilize smbclient to access this share and see what we can find:
+<img width="1379" height="618" alt="image" src="https://github.com/user-attachments/assets/f85cc200-8523-4bda-8e7f-024d2e35c216" />
 
 We see two directories, "Dev" and "HelpDesk". Inside of "Dev", we see "winrm_backup.zip", so we grab that. Inside of HelpDesk, we see documentation for LAPS, hinting that LAPS is likely configured on this domain controller.
 
 Upon attempting to unzip the .zip file we retrieved, we see it is password protected. Luckily, JohnTheRipper has a module available to create a hash for this, zip2john:
-Putting that hash through John with the rockyou wordlist, we see the password to unzip the file is supremelegacy
+<img width="1202" height="250" alt="image" src="https://github.com/user-attachments/assets/1d00d96b-f5c6-440a-8776-730a71a2e187" />
+
+Putting that hash through John with the rockyou wordlist, we see the password to unzip the file is `supremelegacy`
+<img width="1318" height="492" alt="image" src="https://github.com/user-attachments/assets/421d0c3c-fccd-4c0c-951e-72e66b2d0589" />
+
 Inside of the .zip, we see "legacyy_dev_auth.pfx". A .pfx file a file that contains both a users public key and private key. In this case, it appears they were used for WinRM authentication. This is also password protected though:
 So, we must use pfx2john in order to get a password hash.
 And once again, we can crack that with John and the rockyou wordlist.
-The password for our .pfx file is thuglegacy .
+The password for our .pfx file is `thuglegacy`.
 Next, we can utilize openssl in order to separate the private key and SSL certificate for authentication
 Awesome! We have initial access as the user legacyy.
-Running a quick check (whoami /all) to see our current user's groups and privileges, I see nothing of interest:
+Running a quick check (`whoami /all`) to see our current user's groups and privileges, I see nothing of interest:
 Next, I transferred winPEAS to the target via PowerShell's Invoke-WebRequest and saved that as wp.exe, then executed it:
 While this was running, I had a lightbulb moment and remembered LAPS was likely enabled on this host. However, I knew that in order to abuse it, I was going to need an account with credentials.
 winPEAS confirmed my LAPS suspicions, and it also noted that I had a PowerShell console history text file with some data inside.
