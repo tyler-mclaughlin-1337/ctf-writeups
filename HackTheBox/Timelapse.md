@@ -44,13 +44,9 @@ I'll utilize smbclient to access this share and see what we can find:
 
 We see two directories, "Dev" and "HelpDesk". Inside of "Dev", we see "winrm_backup.zip", so we grab that. Inside of HelpDesk, we see documentation for LAPS, hinting that LAPS is likely configured on this domain controller.
 
-Upon attempting to unzip the .zip file we retrieved, we see it is password protected. Luckily, JohnTheRipper has a module available to create a hash for this, zip2john:
+Upon attempting to unzip the .zip file we retrieved, we see it is password protected. Luckily, JohnTheRipper has a module available to create a hash for this, zip2john. Putting that hash through John with the rockyou wordlist, we see the password to unzip the file is `supremelegacy`
 
 <img width="1202" height="250" alt="image" src="https://github.com/user-attachments/assets/1d00d96b-f5c6-440a-8776-730a71a2e187" />
-
-Putting that hash through John with the rockyou wordlist, we see the password to unzip the file is `supremelegacy`
-
-<img width="1318" height="492" alt="image" src="https://github.com/user-attachments/assets/421d0c3c-fccd-4c0c-951e-72e66b2d0589" />
 
 Inside of the .zip, we see "legacyy_dev_auth.pfx". A .pfx file a file that contains both a users public key and private key. In this case, it appears they were used for WinRM authentication. This is also password protected though. We must use pfx2john in order to get a password hash.
 
