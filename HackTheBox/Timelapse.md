@@ -58,7 +58,7 @@ Inside of the .zip, we see "legacyy_dev_auth.pfx". A .pfx file a file that conta
 
 Once again, we can crack that with John and the rockyou wordlist.
 
-<img width="900" height="227" alt="image" src="https://github.com/user-attachments/assets/65d5a051-bcc2-4937-a868-74cea4f75829" />
+<img width="900" height="227" alt="image" src="https://github.com/user-attachments/assets/80912610-1a5c-4a4b-876f-314df6263fda" />
 
 The password for our .pfx file is `thuglegacy`.
 
